@@ -9,14 +9,13 @@ public class gameMaster : MonoBehaviour
     public GameObject cardPrefab;
     void Start()
     {
-        GameObject currentCardOb = null;
-        Card currentCard = null;
+        GameObject currentCard = null;
         for(int i = 0; i < cards.Length; i++)
         {
-            currentCard = new Card(i/13, i%13, cardSprites[i]);
+            //currentCard = new Card(i/13, i%13, cardSprites[i]);
 
-            //currentCard = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
-
+            currentCard = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
+            currentCard.GetComponent<CardObject>.newCard();
         }
     }
 
