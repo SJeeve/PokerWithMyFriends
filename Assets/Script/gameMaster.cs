@@ -15,7 +15,6 @@ public class gameMaster : MonoBehaviour
             //currentCard = new Card(i/13, i%13, cardSprites[i]);
 
             currentCard = Instantiate(cardPrefab, new Vector2(0, 0), Quaternion.identity);
-            currentCard.GetComponent<CardObject>.newCard();
         }
     }
 
