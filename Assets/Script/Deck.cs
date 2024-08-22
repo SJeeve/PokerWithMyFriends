@@ -8,6 +8,7 @@ namespace cardClass
     public class BaseDeck
     {
         Card[] cards = new Card[52];
+        Queue<Card> shuffledDeck = new Queue<Card>();
         public BaseDeck(Sprite[] cardSprites)
         {
             if (cardSprites.Length != 52)
@@ -21,6 +22,12 @@ namespace cardClass
             return cards;
         }
 
+
+
+    }
+
+    static class RandomExtensions
+    {
         public static Card[] Shuffle<Card>(this System.Random rng, Card[] array)
         {
             Card[] tempArray = array;
@@ -30,12 +37,11 @@ namespace cardClass
             {
                 int k = rng.Next(n--);
                 Card temp = array[n];
-                array[n] = array[k];
-                array[k] = temp;
+                tempArray[n] = array[k];
+                tempArray[k] = temp;
             }
             return tempArray;
         }
-
     }
 
 }
