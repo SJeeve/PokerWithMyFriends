@@ -7,6 +7,7 @@ namespace cardClass
             public int rank;
             public Sprite cardSprite;
             [SerializeField] public SpriteRenderer spriteRenderer;
+            public Sprite backSprite;
 
             public Card(int suit, int rank, Sprite cardSprite)
             {
@@ -15,6 +16,12 @@ namespace cardClass
                 this.cardSprite = cardSprite;
             }
 
+        public Card()
+        {
+            this.suit = 0;
+            this.rank = 0;
+        }
+
             public void updateFace()
             {
                 if (spriteRenderer.sprite != null)
@@ -22,6 +29,14 @@ namespace cardClass
                     spriteRenderer.sprite = cardSprite;
                 }
             }
+
+        public void updateBack()
+        {
+            if (spriteRenderer.sprite != null)
+            {
+                spriteRenderer.sprite = backSprite;
+            }
+        }
 
     }
 }
