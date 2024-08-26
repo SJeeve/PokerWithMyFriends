@@ -5,7 +5,7 @@ namespace cardClass
 {
     public class Hand : MonoBehaviour
     {
-        //[SerializeField] GameObject.
+        
         void Start()
         {
 

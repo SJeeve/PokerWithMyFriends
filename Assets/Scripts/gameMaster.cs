@@ -9,11 +9,11 @@ public class gameMaster : MonoBehaviour
     [SerializeField] Sprite[] cardSprites = new Sprite[52];
     GameObject[] cards = new GameObject[52];
     public GameObject cardPrefab;
-    public BaseDeck startDeck;
-    public 
+    public Deck deck;
     void Start()
     {
-        startDeck = new BaseDeck(cardSprites);
+        deck = new Deck(cardSprites);
+        deck.ShuffleDeck();
     }
 
     // Update is called once per frame
