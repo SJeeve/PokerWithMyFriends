@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MusicSizeChange : MonoBehaviour
 {
+    //Stop being nosy Will
     [SerializeField] AudioSource musicSource;
     public float updateStep = 0.1f;
     //Number of samples to get 
