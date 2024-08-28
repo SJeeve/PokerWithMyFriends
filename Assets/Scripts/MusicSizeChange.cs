@@ -5,11 +5,15 @@ using UnityEngine;
 
 public class MusicSizeChange : MonoBehaviour
 {
-    // Start is called before the first frame update
     [SerializeField] AudioSource musicSource;
     public float updateStep = 0.1f;
+    //Number of samples to get 
+    //1024 samples is about 80 ms
+    //Depends on hz
     public int sampleDataLength = 1024;
-    private float ObjectSize;
+    //Stores the initial scale of an object's x y and z scales
+    //Not needed for this project but might be useful for future projects
+    private float[] baseSize = new float[3];
     private float currentUpdateTime = 0f;
 
     private float clipLoudness;
@@ -17,14 +21,16 @@ public class MusicSizeChange : MonoBehaviour
     void Awake()
     {
         samples = new float[sampleDataLength];
-        ObjectSize = gameObject.transform.localScale.x;
+        baseSize[0] = gameObject.transform.localScale.x;
+        baseSize[1] = gameObject.transform.localScale.y;
+        baseSize[2] = gameObject.transform.localScale.z;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Thank you to Chris_Entropy on Unity Discussions for example of code to get current "loudness"
         currentUpdateTime += Time.deltaTime;
+        //Updates every tenth of a second
         if (currentUpdateTime >= updateStep)
         {
             currentUpdateTime = 0f;
@@ -36,7 +42,8 @@ public class MusicSizeChange : MonoBehaviour
             }
             clipLoudness /= sampleDataLength;
         }
-        gameObject.transform.localScale = new Vector3(ObjectSize * (clipLoudness + 1), ObjectSize * (clipLoudness + 1), ObjectSize * (clipLoudness + 1));
-        
+        gameObject.transform.localScale = new Vector3(baseSize[0] * (clipLoudness + 1), baseSize[1] * (clipLoudness + 1), baseSize[2] * (clipLoudness + 1));
+        //This code gets the current "loudness" of a music clip by getting a number of samples equivalent to sampleDataLength then averaging all of the samples together 
+        //It then sets the scale of the object to the starting scale multiplied by the average loudness + 1
     }
 }
