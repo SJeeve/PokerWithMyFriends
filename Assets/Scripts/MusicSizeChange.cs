@@ -23,7 +23,7 @@ public class MusicSizeChange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Thank you to Chris_Entropy on Unity Discussions for the code to get current "loudness"
+        //Thank you to Chris_Entropy on Unity Discussions for example of code to get current "loudness"
         currentUpdateTime += Time.deltaTime;
         if (currentUpdateTime >= updateStep)
         {
