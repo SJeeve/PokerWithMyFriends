@@ -12,6 +12,8 @@ public class gameMaster : MonoBehaviour
     public Deck deck;
     void Start()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 24;
         deck = new Deck(cardSprites);
         deck.ShuffleDeck();
     }

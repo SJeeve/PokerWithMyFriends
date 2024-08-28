@@ -1493,6 +1493,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7938827214067729440, guid: 0fcf1303b38110945a73dcbdc69d2cc7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1656409555}
+    - targetCorrespondingSourceObject: {fileID: 7938827214067729440, guid: 0fcf1303b38110945a73dcbdc69d2cc7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1656409559}
   m_SourcePrefab: {fileID: 100100000, guid: 0fcf1303b38110945a73dcbdc69d2cc7, type: 3}
 --- !u!1 &455925618
 GameObject:
@@ -8269,6 +8272,20 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &1656409559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656409547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9a7acaa17c9bc48afc8aaec3fef99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicSource: {fileID: 1656409552}
+  samples: 0
 --- !u!1 &1669784577
 GameObject:
   m_ObjectHideFlags: 0
