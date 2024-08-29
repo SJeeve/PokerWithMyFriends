@@ -6,7 +6,7 @@ using UnityEngine;
 public class MusicSizeChange : MonoBehaviour
 {
     //Stop being nosy Will
-    [SerializeField] AudioSource musicSource;
+    public AudioSource musicSource;
     public float updateStep = 0.1f;
     //Number of samples to get 
     //1024 samples is about 80 ms
@@ -21,6 +21,7 @@ public class MusicSizeChange : MonoBehaviour
     private float[] samples;
     void Awake()
     {
+        musicSource = gameObject.GetComponent<AudioSource>();
         samples = new float[sampleDataLength];
         baseSize[0] = gameObject.transform.localScale.x;
         baseSize[1] = gameObject.transform.localScale.y;
