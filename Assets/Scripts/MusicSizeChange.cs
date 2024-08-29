@@ -13,7 +13,7 @@ public class MusicSizeChange : MonoBehaviour
     //Depends on hz
     public int sampleDataLength = 1024;
     //Stores the initial scale of an object's x y and z scales
-    //Not needed for this project but might be useful for future projects
+    //Storing each scale not needed for this project, but might be useful for future products
     private float[] baseSize = new float[3];
     private float currentUpdateTime = 0f;
 
