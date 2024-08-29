@@ -1,1 +1,8 @@
 -Need to plan how I'll implement the actual poker game
+  -First distribute cards to each player
+  -rate hand and then declare winner
+  -Then implement ability to discard
+  -Then add ability to bet (raise, fold, call)
+  -Add base ai so npcs can make better decisions
+  -During development make ai modular so values can be easily changed
+  -Make json to store data for each person
