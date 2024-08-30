@@ -9,7 +9,7 @@ public class MusicSizeChange : MonoBehaviour
     public AudioSource musicSource;
     public float updateStep = 0.1f;
     //Number of samples to get 
-    //1024 samples is about 80 ms
+    //1024 samples is ~80 ms
     //Depends on hz
     public int sampleDataLength = 1024;
     //Stores the initial scale of an object's x y and z scales

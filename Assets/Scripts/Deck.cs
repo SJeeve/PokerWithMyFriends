@@ -39,6 +39,11 @@ namespace cardClass
             }
         }
 
+        public Card DrawCard()
+        {
+            return shuffledDeck.Dequeue();
+        }
+
     }
 
     static class RandomExtensions

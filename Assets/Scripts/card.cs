@@ -40,7 +40,7 @@ namespace cardClass
                 }
             }
 
-        public override string ToString()
+            public override string ToString()
         {
             string output = "";
             //Prolly not good code but I wanted to 
