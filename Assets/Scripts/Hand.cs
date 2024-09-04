@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using PokerEnums;
 namespace cardClass
 {
     public class Hand
     {
         private List<Card> hand = new List<Card>();
-        public Hand(){}
-
+        public PokerEnums.PokerEnums.HandResults handResults;
+        public Hand()
+        {
+            handResults = PokerEnums.PokerEnums.HandResults.None;
+        }
         public void AddCard(Card card)
         {
             hand.Add(card);
@@ -25,21 +29,18 @@ namespace cardClass
         {
             return hand.Count;
         }
-
         public Card GetCard(int i)
         {
             return hand[i];
         }
-        public string RateHand()
+        public void RateHand()
         {
             if(hand.Count != 5)
-            {
                 Debug.Log("Hand size does not equal 5");
-            }
+
             //Rating Hand not implemented yet
             hand.Sort((x, y) => x.rank.CompareTo(y.rank));
-
-            return "";
+            
         }
     }
 }

@@ -29,5 +29,20 @@ namespace PokerEnums
             Hearts,
             Spades
         }
+        public enum HandResults 
+        {
+            None = -1,
+            HighCard,
+            OnePair,
+            TwoPair,
+            ThreeOfAKind,
+            Straight,
+            Flush,
+            FullHouse,
+            FourOfAKind,
+            StraightFlush,
+            RoyalFlush
+        }
+
     }
 }

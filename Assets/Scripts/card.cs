@@ -42,14 +42,13 @@ namespace cardClass
             }
 
             public override string ToString()
-        {
-            string output = "";
-            //Prolly not good code but I wanted to 
-            output += Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), rank);
-            output += " of ";
-            output += Enum.GetName(typeof(PokerEnums.PokerEnums.Suit), suit);
-            return output;
-        }
+            {
+                string output = "";
+                output += Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), rank);
+                output += " of ";
+                output += Enum.GetName(typeof(PokerEnums.PokerEnums.Suit), suit);
+                return output;
+            }
 
 
     }
