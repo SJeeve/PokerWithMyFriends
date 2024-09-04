@@ -1,5 +1,6 @@
 using cardClass;
 using characterClass;
+using PokerEnums;
 using System.Collections;
 using System;
 using UnityEngine;
@@ -36,10 +37,17 @@ public class gameMaster : MonoBehaviour
         {
             for(int d = 0; d < 5; d++)
             {
-
                 characters[c].AddCard(deck.DrawCard());
             }
             Debug.Log(characters[c].ToString());
+        }
+    }
+
+    public void DealToFive(Character character)
+    {
+        while(character.GetLength() <= 5)
+        {
+            character.AddCard(deck.DrawCard());
         }
     }
 

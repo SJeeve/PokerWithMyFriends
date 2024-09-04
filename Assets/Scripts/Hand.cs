@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 namespace cardClass
 {
@@ -36,6 +37,8 @@ namespace cardClass
                 Debug.Log("Hand size does not equal 5");
             }
             //Rating Hand not implemented yet
+            hand.Sort((x, y) => x.rank.CompareTo(y.rank));
+
             return "";
         }
     }

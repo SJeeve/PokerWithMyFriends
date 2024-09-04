@@ -30,7 +30,10 @@ namespace characterClass
             Debug.Log($"Removed card at index {i} from {name}'s hand");
             hand.DiscardCard(i);
         }
-
+        public int GetLength()
+        {
+            return hand.GetLength();
+        }
         public override string ToString()
         {
             string output = $"{name} has a ";

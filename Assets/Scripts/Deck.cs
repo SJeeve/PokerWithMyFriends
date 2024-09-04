@@ -1,3 +1,4 @@
+using PokerEnums;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace cardClass
         public Deck(Sprite[] cardSprites)
         {
             if (cardSprites.Length != 52)
-                Console.WriteLine("cardSprites array length not 52");
+                Debug.Log("cardSprites array length not 52");
             for (int i = 0; i < 52; i++)
-                cards[i] = new Card(i / 13, i % 13, cardSprites[i]);
+                cards[i] = new Card((PokerEnums.PokerEnums.Suit)(i / 13), (PokerEnums.PokerEnums.Rank)(i % 13), cardSprites[i]);
         }
 
         public void ShuffleDeck()
@@ -23,7 +24,6 @@ namespace cardClass
             shuffledDeck.Clear();
             shuffledDeck = RandomExtensions.Shuffle<Card>(Random, cards);
         }
-
         public void PrintShuffled()
         {
             foreach (Card card in shuffledDeck)
@@ -38,7 +38,6 @@ namespace cardClass
                 Debug.Log(card.ToString());
             }
         }
-
         public Card DrawCard()
         {
             return shuffledDeck.Dequeue();
