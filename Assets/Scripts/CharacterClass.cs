@@ -34,6 +34,10 @@ namespace characterClass
         {
             return hand.GetLength();
         }
+        public PokerEnums.PokerEnums.HandResults HandResult()
+        {
+            return hand.handResult;
+        }
         public override string ToString()
         {
             string output = $"{name} has a ";

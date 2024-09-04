@@ -8,7 +8,7 @@ namespace cardClass
     public class Hand
     {
         private List<Card> hand = new List<Card>();
-        public PokerEnums.PokerEnums.HandResults handResults;
+        public PokerEnums.PokerEnums.HandResults handResult;
         public Hand()
         {
             handResults = PokerEnums.PokerEnums.HandResults.None;

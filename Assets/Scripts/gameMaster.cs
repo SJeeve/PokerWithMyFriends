@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 public class gameMaster : MonoBehaviour
 {
@@ -27,18 +28,19 @@ public class gameMaster : MonoBehaviour
             characters.Add(new Character(players[i], ("Player" + i)));
         }
 
-        InitialDeal();
+        DealToFive();
 
     }
+    public Character GetWinner()
+    {
 
-    public void InitialDeal()
+        return characters.OrderByDescending(h => h.HandResult()).First();
+    }
+    public void DealToFive()
     {
         for(int c = 0; c < characters.Count; c++)
         {
-            for(int d = 0; d < 5; d++)
-            {
-                characters[c].AddCard(deck.DrawCard());
-            }
+            DealToFive(characters[c]);
             Debug.Log(characters[c].ToString());
         }
     }
