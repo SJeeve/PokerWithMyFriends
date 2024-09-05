@@ -11,7 +11,7 @@ namespace cardClass
         public PokerEnums.PokerEnums.HandResults handResult;
         public Hand()
         {
-            handResults = PokerEnums.PokerEnums.HandResults.None;
+            handResult = PokerEnums.PokerEnums.HandResults.None;
         }
         public void AddCard(Card card)
         {
