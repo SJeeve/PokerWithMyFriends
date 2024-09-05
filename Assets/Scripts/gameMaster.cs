@@ -33,7 +33,7 @@ public class gameMaster : MonoBehaviour
     }
     public Character GetWinner()
     {
-
+        //Won't check for ties currently
         return characters.OrderByDescending(h => h.HandResult()).First();
     }
     public void DealToFive()

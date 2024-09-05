@@ -8,7 +8,7 @@ namespace PokerEnums
 
         public enum Rank
         {
-            Ace = 0,
+            Ace = 1,
             Two,
             Three,
             Four,
@@ -20,7 +20,7 @@ namespace PokerEnums
             Ten,
             Jack,
             Queen,
-            King
+            King,
         }
         public enum Suit
         {
@@ -32,16 +32,16 @@ namespace PokerEnums
         public enum HandResults 
         {
             None = -1,
-            HighCard,
-            OnePair,
-            TwoPair,
-            ThreeOfAKind,
-            Straight,
-            Flush,
-            FullHouse,
-            FourOfAKind,
-            StraightFlush,
-            RoyalFlush
+            HighCard = 1,
+            OnePair = 2,
+            TwoPair = 3,
+            ThreeOfAKind = 4,
+            FourOfAKind = 8,
+            Straight = 5,
+            Flush = 6,
+            FullHouse = 7,
+            StraightFlush = 9,
+            RoyalFlush = 10,
         }
 
     }
