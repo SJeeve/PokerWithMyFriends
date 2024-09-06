@@ -29,7 +29,7 @@ public class gameMaster : MonoBehaviour
         }
 
         DealToFive();
-
+        characters[0].GetHand().RateHand();
     }
     public Character GetWinner()
     {
@@ -47,7 +47,7 @@ public class gameMaster : MonoBehaviour
 
     public void DealToFive(Character character)
     {
-        while(character.GetLength() <= 5)
+        while(character.GetLength() < 5)
         {
             character.AddCard(deck.DrawCard());
         }

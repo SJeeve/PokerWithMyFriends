@@ -8,7 +8,7 @@ namespace PokerEnums
 
         public enum Rank
         {
-            Ace = 1,
+            Ace = 0,
             Two,
             Three,
             Four,

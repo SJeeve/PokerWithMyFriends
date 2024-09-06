@@ -36,7 +36,11 @@ namespace characterClass
         }
         public PokerEnums.PokerEnums.HandResults HandResult()
         {
-            return hand.handResult;
+            return hand.HandResult;
+        }
+        public Hand GetHand()
+        {
+            return hand;
         }
         public override string ToString()
         {

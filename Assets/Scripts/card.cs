@@ -5,13 +5,13 @@ namespace cardClass
 {
     public class Card
     {
-            public Enum suit;
-            public Enum rank;
+            public PokerEnums.PokerEnums.Suit suit;
+            public PokerEnums.PokerEnums.Rank rank;
             public Sprite cardSprite;
             [SerializeField] public SpriteRenderer spriteRenderer;
             public Sprite backSprite;
 
-            public Card(Enum suit, Enum rank, Sprite cardSprite)
+            public Card(PokerEnums.PokerEnums.Suit suit, PokerEnums.PokerEnums.Rank rank, Sprite cardSprite)
             {
                 this.suit = suit;
                 this.rank = rank;
@@ -21,8 +21,8 @@ namespace cardClass
 
             public Card()
             {
-                this.suit = (PokerEnums.PokerEnums.Rank)0;
-                this.rank = (PokerEnums.PokerEnums.Suit)0;
+                this.suit = (PokerEnums.PokerEnums.Suit)0;
+                this.rank = (PokerEnums.PokerEnums.Rank)0;
             }
 
             public void updateFace()
