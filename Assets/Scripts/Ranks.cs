@@ -21,6 +21,8 @@ namespace PokerEnums
             Jack,
             Queen,
             King,
+            //EndAce is not assigned to any cards on start, but when deciding the winning rank on a straight will apply if the hand is a 10-A straight
+            EndAce,
         }
         public enum Suit
         {
