@@ -13,6 +13,7 @@ namespace cardClass
         private List<Card> hand = new List<Card>();
         private PokerEnums.PokerEnums.HandResults handResult;
         private PokerEnums.PokerEnums.Rank winningRank;
+        private PokerEnums.PokerEnums.Rank winningRankSub;
         public PokerEnums.PokerEnums.HandResults HandResult
         {
             get => handResult;
@@ -36,8 +37,12 @@ namespace cardClass
 
             //Rating Hand not implemented yet
             List<Card> tempHand = new List<Card>(hand);
-            CheckPair(tempHand);
+            //CheckPair(tempHand);
             tempHand.Sort((x, y) => x.rank.CompareTo(y.rank));
+            foreach(Card card in tempHand)
+            {
+                Debug.Log(card);
+            }
             
         }
         //Change all checks to private after done testing
@@ -56,16 +61,52 @@ namespace cardClass
         {
            if(tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 2) == 2)
             {
-
                 return true;
             }
            return false;
+        }
+        public bool CheckThree(List<Card> tempHand)
+        {
+            if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 3) == 1)
+            {
+                winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 3).Last().Key;
+                Debug.Log(Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), winningRank));
+                return true;
+            }
+            return false;
+        }
+        public bool CheckFour(List<Card> tempHand)
+        {
+            if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 4) == 1)
+            {
+                winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 4).Last().Key;
+                Debug.Log(Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), winningRank));
+                return true;
+            }
+            return false;
+        }
+        public bool CheckStraightFlush(List<Card> tempHand)
+        {
+            if(CheckStraight(tempHand) && CheckFlush(tempHand))
+            {
+                return true;
+            }
+            return false;
         }
         public bool CheckStraight(List<Card> tempHand)
         {
             if (!(tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Five) || tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Ten)))
                 return false;
+            //Idk how to do a lambda expression for this
+            bool endAce = tempHand[0].rank + 12 == tempHand[tempHand.Count - 1].rank;
 
+            for (int i = 0; i < tempHand.Count - 1; i++)
+                if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) || (endAce && i == 0)) 
+                    return false;
+            if (endAce)
+                winningRank = PokerEnums.PokerEnums.Rank.EndAce;
+            else
+                winningRank = tempHand.Last().rank;
             return true;
         }
     }
