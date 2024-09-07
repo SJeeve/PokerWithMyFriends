@@ -44,7 +44,6 @@ namespace cardClass
         public bool CheckFlush(List<Card> tempHand) => !(tempHand.Any(card => card.suit != hand[index: 0].suit));
         public bool CheckPair(List<Card> tempHand)
         {
-            
             if(tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 2) == 1)
             {
                 winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 2).Last().Key;
