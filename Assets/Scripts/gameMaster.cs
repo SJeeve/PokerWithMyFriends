@@ -15,6 +15,11 @@ public class gameMaster : MonoBehaviour
     public Deck deck;
     public List<GameObject> players = new List<GameObject>();
     private List<Character> characters = new List<Character>();
+    private List<Action> RateHandFunctions = new List<Action>();
+    private void Awake()
+    {
+        players.Clear();
+    }
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -29,7 +34,10 @@ public class gameMaster : MonoBehaviour
         }
 
         DealToFive();
-        characters[0].GetHand().RateHand();
+        foreach(Character character in characters)
+        {
+            character.GetHand().RateHandPrep();
+        }
     }
     public Character GetWinner()
     {
@@ -53,6 +61,8 @@ public class gameMaster : MonoBehaviour
         }
     }
 
+
 }
+
 
 

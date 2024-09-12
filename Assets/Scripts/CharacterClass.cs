@@ -7,7 +7,7 @@ namespace characterClass
     public class Character
     {
         GameObject character;
-        Hand hand;
+        private Hand hand;
         string name;
         public Character(GameObject character, string name) {
             this.character = character;
