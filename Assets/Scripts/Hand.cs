@@ -121,16 +121,16 @@ namespace cardClass
         }
         public bool CheckStraight(List<Card> tempHand)
         {
+            //I don't know how to do a lambda expression for this one
             if (!(tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Five) || tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Ten)))
                 return false;
-            //Idk how to do a lambda expression for this
-            bool endAce = tempHand[0].rank + 12 == tempHand[tempHand.Count - 1].rank;
+            bool beginningAce = tempHand.Last().rank == Rank.Ace && tempHand.First().rank == Rank.Two;
 
             for (int i = 0; i < tempHand.Count - 1; i++)
-                if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) || (endAce && i == 0))
+                if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) && !(beginningAce && i == tempHand.Count - 1))
                     return false;
-            if (endAce)
-                winningRank = PokerEnums.PokerEnums.Rank.EndAce;
+            if (beginningAce)
+                winningRank = PokerEnums.PokerEnums.Rank.BeginningAce;
             else
                 winningRank = tempHand.Last().rank;
             return true;

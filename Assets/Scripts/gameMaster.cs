@@ -12,6 +12,8 @@ using NUnit.Framework.Constraints;
 public class gameMaster : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //cardSprites is currently not working because values of rank enums were changed
+    //Need to reorder it 
     [SerializeField] Sprite[] cardSprites = new Sprite[52];
     public Deck deck;
     public List<GameObject> playerObjects = new List<GameObject>();
