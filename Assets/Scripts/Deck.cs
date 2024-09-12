@@ -9,10 +9,11 @@ namespace cardClass
     public class Deck
     {
         Card[] cards = new Card[52];
-        Queue<Card> shuffledDeck = new Queue<Card>();
+        Stack<Card> shuffledDeck = new Stack<Card>();
         System.Random Random = new System.Random();
         public Deck(Sprite[] cardSprites)
         {
+            Debug.Log((PokerEnums.PokerEnums.Rank)(0));
             if (cardSprites.Length != 52)
                 Debug.Log("cardSprites array length not 52");
             for (int i = 0; i < 52; i++)
@@ -40,7 +41,7 @@ namespace cardClass
         }
         public Card DrawCard()
         {
-            return shuffledDeck.Dequeue();
+            return shuffledDeck.Pop();
         }
 
     }
@@ -48,7 +49,7 @@ namespace cardClass
     static class RandomExtensions
     {
         //Knuth shuffle
-        public static Queue<Card> Shuffle<Card>(this System.Random rng, Card[] array)
+        public static Stack<Card> Shuffle<Card>(this System.Random rng, Card[] array)
         {
             Card[] tempArray = array;
             int n = array.Length;
@@ -63,12 +64,12 @@ namespace cardClass
                 tempArray[n] = tempArray[k];
                 tempArray[k] = temp;
             }
-            Queue<Card> queue = new Queue<Card>();
+            Stack<Card> stack = new Stack<Card>();
             for(int j = 0; j < tempArray.Length; j++)
             {
-                queue.Enqueue(tempArray[j]);
+                stack.Push(tempArray[j]);
             }
-            return queue;
+            return stack;
         }
     }
 

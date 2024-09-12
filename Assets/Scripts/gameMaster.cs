@@ -7,14 +7,18 @@ using UnityEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Constraints;
 
 public class gameMaster : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //cardSprites is currently not working because values of rank enums were changed
+    //Need to reorder it 
     [SerializeField] Sprite[] cardSprites = new Sprite[52];
     public Deck deck;
-    public List<GameObject> players = new List<GameObject>();
+    public List<GameObject> playerObjects = new List<GameObject>();
     private List<Character> characters = new List<Character>();
+
     void Start()
     {
         QualitySettings.vSyncCount = 0;
@@ -25,10 +29,15 @@ public class gameMaster : MonoBehaviour
         //Game Start
         for (int i = 0; i < 4; i++)
         {
-            characters.Add(new Character(players[i], ("Player" + i)));
+            characters.Add(new Character(playerObjects[i], ("Player" + i)));
         }
 
         DealToFive();
+        characters[0].GetHand().SetHand(new List<Card> { new Card(PokerEnums.PokerEnums.Suit.Spades, PokerEnums.PokerEnums.Rank.Ace, cardSprites[0]),
+            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Ace, cardSprites[0]),
+            new Card(PokerEnums.PokerEnums.Suit.Spades, PokerEnums.PokerEnums.Rank.Three, cardSprites[0]),
+            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Three, cardSprites[0]),
+            new Card(PokerEnums.PokerEnums.Suit.Spades, PokerEnums.PokerEnums.Rank.Ten, cardSprites[0]) });
         characters[0].GetHand().RateHand();
     }
     public Character GetWinner()
@@ -53,6 +62,8 @@ public class gameMaster : MonoBehaviour
         }
     }
 
+
 }
+
 
 
