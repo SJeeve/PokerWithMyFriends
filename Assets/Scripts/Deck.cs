@@ -13,6 +13,7 @@ namespace cardClass
         System.Random Random = new System.Random();
         public Deck(Sprite[] cardSprites)
         {
+            Debug.Log((PokerEnums.PokerEnums.Rank)(0));
             if (cardSprites.Length != 52)
                 Debug.Log("cardSprites array length not 52");
             for (int i = 0; i < 52; i++)

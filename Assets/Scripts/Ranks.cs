@@ -8,8 +8,8 @@ namespace PokerEnums
 
         public enum Rank
         {
-            Ace = 0,
-            Two,
+            Ace = 12,
+            Two = 0,
             Three,
             Four,
             Five,
@@ -21,8 +21,7 @@ namespace PokerEnums
             Jack,
             Queen,
             King,
-            //EndAce is not assigned to any cards on start, but when deciding the winning rank on a straight will apply if the hand is a 10-A straight
-            EndAce,
+            BeginningAce = -1,
         }
         public enum Suit
         {
