@@ -882,8 +882,7 @@ MonoBehaviour:
   - {fileID: -1109269373, guid: 3b9bc8467a1949f4a806df8929eb4211, type: 3}
   - {fileID: -1634861617, guid: 3b9bc8467a1949f4a806df8929eb4211, type: 3}
   - {fileID: 1260464900, guid: 3b9bc8467a1949f4a806df8929eb4211, type: 3}
-  cardPrefab: {fileID: 0}
-  players:
+  playerObjects:
   - {fileID: 1145705844}
   - {fileID: 1222391488}
   - {fileID: 1476513631}
