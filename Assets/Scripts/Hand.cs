@@ -51,15 +51,16 @@ namespace cardClass
             {
                 Debug.Log(card);
             }
-            IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> handGrouped = tempHand.GroupBy(x => x.rank);
+
             CheckTwoPair(handGrouped);
             
         }
         //Change all checks to private after done testing
-        public bool CheckRoyalFlush(List<Card> tempHand) => CheckStraightFlush(tempHand) && winningRank == Rank.EndAce;
+        public bool CheckRoyalFlush(List<Card> tempHand) => CheckStraightFlush(tempHand) && winningRank == Rank.Ace;
         public bool CheckFlush(List<Card> tempHand) => !(tempHand.Any(card => card.suit != hand[index: 0].suit));
         public bool CheckPair(List<Card> tempHand)
         {
+            
             if(tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 2) == 1)
             {
                 winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 2).Last().Key;
@@ -68,16 +69,15 @@ namespace cardClass
             }
             return false;
         }
-        public bool CheckTwoPair(IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups)
+        public bool CheckTwoPair(List<Card> tempHand)
         {
-            groups = groups.Where(g => g.Count() == 2);
+            IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups = tempHand.GroupBy(x => x.rank).Where(g => g.Count() == 2);
             if (groups.Count() == 2)
             {
                 winningRank = groups.Last().Key;
                 Debug.Log(winningRank + "winning rank");
                 winningRankSub = groups.First().Key;
                 Debug.Log(winningRankSub + "winning sub rank");
-
                 return true;
             }
             return false;
