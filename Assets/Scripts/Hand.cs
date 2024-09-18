@@ -82,12 +82,27 @@ namespace cardClass
             }
             return false;
         }
+        //CheckFullHouse handles itself, three of a kind, two pair, and pairs.
         public bool CheckFullHouse(List<Card> tempHand)
         {
-            if(tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 3) == 1 && tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 2) == 1)
+            IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups = tempHand.GroupBy(x => x.rank).Where(g => g.Count() >= 2);
+            if(groups)
+            if(groups.Count(g => g.Count() == 3) == 1)
             {
-                //
+                //If we have a three of a kind we know the card in the middle is the winningRank
+                winningRank = tempHand[2].rank;
+                if(groups.Count(g => g.Count() == 2) == 1)
+                {
+                    handResult = HandResults.FullHouse;
+                    winningRankSub = groups.Where(g => g.Count() == 2).Last().Key;
+                    return true;
+                }
+                handResult = HandResults.ThreeOfAKind;
+            } else {
+                
+                winningRank = groups.Where(g => g.Count() == 2)
             }
+                
             return false;
         }
         public bool CheckThree(List<Card> tempHand)
@@ -102,6 +117,7 @@ namespace cardClass
         }
         public bool CheckFour(List<Card> tempHand)
         {
+            
             if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 4) == 1)
             {
                 winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 4).Last().Key;
