@@ -52,7 +52,6 @@ namespace cardClass
                 Debug.Log(card);
             }
 
-            CheckTwoPair(handGrouped);
             
         }
         //Change all checks to private after done testing
@@ -60,33 +59,16 @@ namespace cardClass
         public bool CheckFlush(List<Card> tempHand) => !(tempHand.Any(card => card.suit != hand[index: 0].suit));
         public bool CheckPair(List<Card> tempHand)
         {
-            
-            if(tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 2) == 1)
-            {
-                winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 2).Last().Key;
-                Debug.Log(Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), winningRank));
-                return true;
-            }
-            return false;
+            return handResult == HandResults.OnePair;
         }
         public bool CheckTwoPair(List<Card> tempHand)
         {
-            IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups = tempHand.GroupBy(x => x.rank).Where(g => g.Count() == 2);
-            if (groups.Count() == 2)
-            {
-                winningRank = groups.Last().Key;
-                Debug.Log(winningRank + "winning rank");
-                winningRankSub = groups.First().Key;
-                Debug.Log(winningRankSub + "winning sub rank");
-                return true;
-            }
-            return false;
+            return handResult == HandResults.TwoPair;
         }
         //CheckFullHouse handles itself, three of a kind, two pair, and pairs.
         public bool CheckFullHouse(List<Card> tempHand)
         {
             IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups = tempHand.GroupBy(x => x.rank).Where(g => g.Count() >= 2);
-            if(groups)
             if(groups.Count(g => g.Count() == 3) == 1)
             {
                 //If we have a three of a kind we know the card in the middle is the winningRank
@@ -99,29 +81,28 @@ namespace cardClass
                 }
                 handResult = HandResults.ThreeOfAKind;
             } else {
-                
-                winningRank = groups.Where(g => g.Count() == 2)
+
+                winningRank = groups.Last().Key;
+                handResult = HandResults.OnePair;
+                if(groups.Count() > 1)
+                {
+                    winningRankSub = groups.First().Key;
+                    handResult = HandResults.TwoPair;
+                }
             }
                 
             return false;
         }
         public bool CheckThree(List<Card> tempHand)
         {
-            if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 3) == 1)
-            {
-                winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 3).Last().Key;
-                Debug.Log(Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), winningRank));
-                return true;
-            }
-            return false;
+            return handResult == HandResults.ThreeOfAKind;
         }
         public bool CheckFour(List<Card> tempHand)
         {
             
             if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 4) == 1)
             {
-                winningRank = tempHand.GroupBy(x => x.rank).Where(x => x.Count() == 4).Last().Key;
-                Debug.Log(Enum.GetName(typeof(PokerEnums.PokerEnums.Rank), winningRank));
+                winningRank = tempHand[3].rank;
                 return true;
             }
             return false;
@@ -145,7 +126,7 @@ namespace cardClass
                 if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) && !(beginningAce && i == tempHand.Count - 1))
                     return false;
             if (beginningAce)
-                winningRank = PokerEnums.PokerEnums.Rank.BeginningAce;
+                winningRank = tempHand[tempHand.Count - 2].rank;
             else
                 winningRank = tempHand.Last().rank;
             return true;
