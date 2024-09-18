@@ -83,12 +83,14 @@ namespace cardClass
             } else {
 
                 winningRank = groups.Last().Key;
-                handResult = HandResults.OnePair;
+                
                 if(groups.Count() > 1)
                 {
                     winningRankSub = groups.First().Key;
                     handResult = HandResults.TwoPair;
+                    return false;
                 }
+                handResult = HandResults.OnePair;
             }
                 
             return false;
