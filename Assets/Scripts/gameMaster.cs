@@ -33,11 +33,11 @@ public class gameMaster : MonoBehaviour
         }
 
         DealToFive();
-        characters[0].GetHand().SetHand(new List<Card> { new Card(PokerEnums.PokerEnums.Suit.Spades, PokerEnums.PokerEnums.Rank.Ace, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Ace, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Spades, PokerEnums.PokerEnums.Rank.Three, cardSprites[0]),
+        characters[0].GetHand().SetHand(new List<Card> { new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Ace, cardSprites[0]),
             new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Three, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Spades, PokerEnums.PokerEnums.Rank.Ten, cardSprites[0]) });
+            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Two, cardSprites[0]),
+            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Two, cardSprites[0]),
+            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Two, cardSprites[0]) });
         characters[0].GetHand().RateHand();
     }
     public Character GetWinner()
@@ -50,7 +50,7 @@ public class gameMaster : MonoBehaviour
         for(int c = 0; c < characters.Count; c++)
         {
             DealToFive(characters[c]);
-            Debug.Log(characters[c].ToString());
+            //Debug.Log(characters[c].ToString());
         }
     }
 

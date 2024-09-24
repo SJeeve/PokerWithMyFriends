@@ -5,6 +5,7 @@ using UnityEngine;
 using PokerEnums;
 using static PokerEnums.PokerEnums;
 using System;
+using Unity.VisualScripting;
 
 namespace cardClass
 {
@@ -27,12 +28,7 @@ namespace cardClass
         {
             hand.Clear();
             hand = cards;
-            Debug.Log("Start of SetHand");
-            Debug.Log(hand.Count());
-            foreach(Card card in hand)
-            {
-                Debug.Log(card);
-            }
+
         }
         public void AddCard(Card card) => hand.Add(card);
         public void DiscardCard(Card card) => hand.Remove(card);
@@ -44,19 +40,34 @@ namespace cardClass
             if(hand.Count != 5)
                 Debug.Log("Hand size does not equal 5");
 
-            List<Card> tempHand = new List<Card>(hand);
-            tempHand.Sort((x, y) => x.rank.CompareTo(y.rank));
+            List<Card> tempHand = new List<Card>();
+            tempHand = hand.OrderBy(x => x.rank).ToList();
+
             Debug.Log("Start of ratehand check");
             foreach(Card card in tempHand)
             {
                 Debug.Log(card);
             }
+            Debug.Log(CheckFullHouse(tempHand));
 
-            
+            Debug.Log(winningRank.ToString());
+            Debug.Log(handResult.ToString());
         }
         //Change all checks to private after done testing
-        public bool CheckRoyalFlush(List<Card> tempHand) => CheckStraightFlush(tempHand) && winningRank == Rank.Ace;
-        public bool CheckFlush(List<Card> tempHand) => !(tempHand.Any(card => card.suit != hand[index: 0].suit));
+        public bool CheckRoyalFlush(List<Card> tempHand)
+        {
+           if(CheckStraightFlush(tempHand) && winningRank == Rank.Ace)
+           {
+                handResult = HandResults.RoyalFlush;
+                return true;
+           }
+           return false;
+        }
+        public bool CheckFlush(List<Card> tempHand)
+        {
+            handResult = HandResults.Flush;
+            return !(tempHand.Any(card => card.suit != hand[index: 0].suit));
+        }
         public bool CheckPair(List<Card> tempHand)
         {
             return handResult == HandResults.OnePair;
@@ -80,7 +91,7 @@ namespace cardClass
                     return true;
                 }
                 handResult = HandResults.ThreeOfAKind;
-            } else {
+            } else if(groups.Count(g => g.Count() == 2) > 0){
 
                 winningRank = groups.Last().Key;
                 
@@ -104,6 +115,7 @@ namespace cardClass
             
             if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 4) == 1)
             {
+                handResult = HandResults.FourOfAKind;
                 winningRank = tempHand[3].rank;
                 return true;
             }
@@ -111,26 +123,48 @@ namespace cardClass
         }
         public bool CheckStraightFlush(List<Card> tempHand)
         {
-            if (CheckStraight(tempHand) && CheckFlush(tempHand))
+            if (handResult == HandResults.StraightFlush)
+                return true;
+            bool Straight = CheckStraight(tempHand);
+            bool Flush = CheckFlush(tempHand);
+            if (Straight)
+                handResult = HandResults.Straight;
+            if (Flush)
+                handResult = HandResults.Flush;
+            if (Straight && Flush)
             {
+                handResult = HandResults.StraightFlush;
                 return true;
             }
             return false;
         }
         public bool CheckStraight(List<Card> tempHand)
         {
-            //I don't know how to do a lambda expression for this one
+            if(handResult == HandResults.Straight)
+                return true;
             if (!(tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Five) || tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Ten)))
                 return false;
-            bool beginningAce = tempHand.Last().rank == Rank.Ace && tempHand.First().rank == Rank.Two;
-
+            bool beginningAce = tempHand[4].rank == Rank.Ace && tempHand[0].rank == Rank.Two;
+            Debug.Log("Beginning Ace: " + beginningAce);
             for (int i = 0; i < tempHand.Count - 1; i++)
-                if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) && !(beginningAce && i == tempHand.Count - 1))
+            {
+                if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) && !(beginningAce && i == tempHand.Count - 2))
                     return false;
+            }
+            Debug.Log("End of for");
             if (beginningAce)
                 winningRank = tempHand[tempHand.Count - 2].rank;
             else
                 winningRank = tempHand.Last().rank;
+            handResult = HandResults.Straight;
+            tempHand.RemoveAt(4);
+            return true;
+        }
+
+        public bool CheckHighCard(List<Card> tempHand)
+        {
+            handResult = HandResults.HighCard;
+            winningRank = tempHand.Last().rank;
             return true;
         }
     }

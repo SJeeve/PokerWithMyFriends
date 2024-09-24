@@ -8,7 +8,6 @@ namespace PokerEnums
 
         public enum Rank
         {
-            Ace = 12,
             Two = 0,
             Three,
             Four,
@@ -21,6 +20,7 @@ namespace PokerEnums
             Jack,
             Queen,
             King,
+            Ace = 12,
             BeginningAce = -1,
         }
         public enum Suit
