@@ -6,6 +6,7 @@ using PokerEnums;
 using static PokerEnums.PokerEnums;
 using System;
 using Unity.VisualScripting;
+using System.Security.Cryptography;
 
 namespace cardClass
 {
@@ -15,6 +16,8 @@ namespace cardClass
         private PokerEnums.PokerEnums.HandResults handResult;
         private PokerEnums.PokerEnums.Rank winningRank;
         private PokerEnums.PokerEnums.Rank winningRankSub;
+        private List<Action> handCheckers;
+        public List<Card> _tempHand;
         public PokerEnums.PokerEnums.HandResults HandResult
         {
             get => handResult;
@@ -23,6 +26,8 @@ namespace cardClass
         public Hand()
         {
             HandResult = PokerEnums.PokerEnums.HandResults.None;
+            handCheckers = new List<Action>();
+            //Action _checkRoyalFlush = () => CheckRoyalFlush
         }
         public void SetHand(List<Card> cards)
         {
@@ -39,16 +44,15 @@ namespace cardClass
         {   
             if(hand.Count != 5)
                 Debug.Log("Hand size does not equal 5");
-
-            List<Card> tempHand = new List<Card>(hand);
-            tempHand = tempHand.OrderBy(x => x.rank).ToList();
+            _tempHand = new(hand);
+            _tempHand = _tempHand.OrderBy(x => x.rank).ToList();
 
             Debug.Log("Start of ratehand check");
-            foreach(Card card in tempHand)
+            foreach(Card card in _tempHand)
             {
                 Debug.Log(card);
             }
-            Debug.Log(CheckFullHouse(tempHand));
+            Debug.Log(CheckFullHouse(_tempHand));
 
             Debug.Log(winningRank.ToString());
             Debug.Log(handResult.ToString());
