@@ -40,8 +40,8 @@ namespace cardClass
             if(hand.Count != 5)
                 Debug.Log("Hand size does not equal 5");
 
-            List<Card> tempHand = new List<Card>();
-            tempHand = hand.OrderBy(x => x.rank).ToList();
+            List<Card> tempHand = new List<Card>(hand);
+            tempHand = tempHand.OrderBy(x => x.rank).ToList();
 
             Debug.Log("Start of ratehand check");
             foreach(Card card in tempHand)
