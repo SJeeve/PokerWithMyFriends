@@ -8,7 +8,7 @@ namespace characterClass
     {
         GameObject character;
         private Hand hand;
-        string name;
+        public string name;
         public Character(GameObject character, string name) {
             this.character = character;
             this.name = name;
@@ -38,18 +38,27 @@ namespace characterClass
         {
             return hand.HandResult;
         }
+        public void RateHand()
+        {
+            hand.RateHand();
+        }
         public Hand GetHand()
         {
             return hand;
         }
+        public void DiscardAll()
+        {
+            hand.DiscardAll();
+        }
         public override string ToString()
         {
-            string output = $"{name} has a ";
+            string output = $"{name} has a \n";
             for(int i = 0; i < hand.GetLength(); i++)
             {
                 output += hand.GetCard(i);
                 output += "\n";
             }
+            output += "Result of hand: " + HandResult().ToString();
             return output;
         }
     }

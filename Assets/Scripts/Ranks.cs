@@ -37,10 +37,10 @@ namespace PokerEnums
             OnePair = 2,
             TwoPair = 3,
             ThreeOfAKind = 4,
-            FourOfAKind = 8,
             Straight = 5,
             Flush = 6,
             FullHouse = 7,
+            FourOfAKind = 8,
             StraightFlush = 9,
             RoyalFlush = 10,
         }

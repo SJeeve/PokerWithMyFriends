@@ -29,37 +29,49 @@ public class gameMaster : MonoBehaviour
         //Game Start
         for (int i = 0; i < 4; i++)
         {
-            characters.Add(new Character(playerObjects[i], ("Player" + i)));
+            characters.Add(new Character(playerObjects[i], "Player" + i));
         }
 
         DealToFive();
-        characters[0].GetHand().SetHand(new List<Card> { new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Ace, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Three, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Two, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Two, cardSprites[0]),
-            new Card(PokerEnums.PokerEnums.Suit.Hearts, PokerEnums.PokerEnums.Rank.Two, cardSprites[0]) });
-        characters[0].GetHand().RateHand();
+        foreach (Character character in characters)
+        {
+            character.RateHand();
+        }
+        Character winner = GetWinner();
+        
+        Debug.Log(winner.name + " won with a " + winner.HandResult().ToString() + winner);
+
     }
     public Character GetWinner()
     {
-        //Won't check for ties currently
-        return characters.OrderByDescending(h => h.HandResult()).First();
+        //This gets the list of characters with the best hand of that round
+        List<Character> winners = characters.Where(x => x.GetHand().HandResult == characters.Max(g => g.GetHand().HandResult)).ToList();
+        if (winners.Count() == 1)
+            return winners[0];
+        Debug.Log("Characters with same handResult");
+        foreach (Character character in winners)
+        {
+            Debug.Log(character);
+        }
+        winners = winners.Where(x => x.GetHand().WinningRank == winners.Max(g => g.GetHand().WinningRank)).ToList();
+        if (winners.Count() == 1)
+            return winners[0];
+        winners = winners.Where(x => x.GetHand().WinningRankSub == winners.Max(g => g.GetHand().WinningRankSub)).ToList();
+        if(winners.Count() == 1)
+            return winners[0];
+        return null;
+
     }
     public void DealToFive()
     {
         for(int c = 0; c < characters.Count; c++)
-        {
             DealToFive(characters[c]);
-            //Debug.Log(characters[c].ToString());
-        }
     }
 
     public void DealToFive(Character character)
     {
         while(character.GetLength() < 5)
-        {
             character.AddCard(deck.DrawCard());
-        }
     }
 
 

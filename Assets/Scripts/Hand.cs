@@ -13,11 +13,21 @@ namespace cardClass
     public class Hand
     {
         private List<Card> hand = new List<Card>();
-        private PokerEnums.PokerEnums.HandResults handResult;
-        private PokerEnums.PokerEnums.Rank winningRank;
-        private PokerEnums.PokerEnums.Rank winningRankSub;
-        private List<Action> handCheckers;
+        private PokerEnums.PokerEnums.HandResults handResult = HandResults.None;
+        private PokerEnums.PokerEnums.Rank _winningRank;
+        private PokerEnums.PokerEnums.Rank _winningRankSub;
+        private List<Func<Boolean>> handCheckers;
         public List<Card> _tempHand;
+        public PokerEnums.PokerEnums.Rank WinningRank
+        {
+            get => _winningRank;
+            private set => _winningRank = value;
+        }
+        public PokerEnums.PokerEnums.Rank WinningRankSub
+        {
+            get => _winningRankSub;
+            private set => _winningRankSub = value;
+        }
         public PokerEnums.PokerEnums.HandResults HandResult
         {
             get => handResult;
@@ -26,8 +36,21 @@ namespace cardClass
         public Hand()
         {
             HandResult = PokerEnums.PokerEnums.HandResults.None;
-            handCheckers = new List<Action>();
-            //Action _checkRoyalFlush = () => CheckRoyalFlush
+            handCheckers = new List<Func<Boolean>>();
+            PopulateActions();
+        }
+        public void PopulateActions()
+        {
+            handCheckers.Add(() => CheckRoyalFlush(_tempHand));
+            handCheckers.Add(() => CheckStraightFlush(_tempHand));
+            handCheckers.Add(() => CheckFour(_tempHand));
+            handCheckers.Add(() => CheckFullHouse(_tempHand));
+            handCheckers.Add(() => CheckFlush(_tempHand));
+            handCheckers.Add(() => CheckStraight(_tempHand));
+            handCheckers.Add(() => CheckThree(_tempHand));
+            handCheckers.Add(() => CheckTwoPair(_tempHand));
+            handCheckers.Add(() => CheckPair(_tempHand));
+            handCheckers.Add(() => CheckHighCard(_tempHand));
         }
         public void SetHand(List<Card> cards)
         {
@@ -38,94 +61,94 @@ namespace cardClass
         public void AddCard(Card card) => hand.Add(card);
         public void DiscardCard(Card card) => hand.Remove(card);
         public void DiscardCard(int i) => hand.RemoveAt(i);
+        public void DiscardAll() => hand.Clear();
         public int GetLength() => hand.Count;
         public Card GetCard(int i) => hand[i];
         public void RateHand()
         {   
             if(hand.Count != 5)
-                Debug.Log("Hand size does not equal 5");
+                Debug.LogWarning("Hand size does not equal 5");
             _tempHand = new(hand);
             _tempHand = _tempHand.OrderBy(x => x.rank).ToList();
 
-            Debug.Log("Start of ratehand check");
-            foreach(Card card in _tempHand)
+            foreach(Func<Boolean> func in handCheckers)
             {
-                Debug.Log(card);
+                if (func.Invoke())
+                {
+                    break;
+                }
             }
-            Debug.Log(CheckFullHouse(_tempHand));
-
-            Debug.Log(winningRank.ToString());
-            Debug.Log(handResult.ToString());
         }
         //Change all checks to private after done testing
-        public bool CheckRoyalFlush(List<Card> tempHand)
+        private bool CheckRoyalFlush(List<Card> tempHand)
         {
-           if(CheckStraightFlush(tempHand) && winningRank == Rank.Ace)
+           if(CheckStraightFlush(tempHand) && _winningRank == Rank.Ace)
            {
                 handResult = HandResults.RoyalFlush;
                 return true;
            }
            return false;
         }
-        public bool CheckFlush(List<Card> tempHand)
+        private bool CheckFlush(List<Card> tempHand)
         {
-            handResult = HandResults.Flush;
+            if(handResult == HandResults.Flush)
+                return true;
             return !(tempHand.Any(card => card.suit != hand[index: 0].suit));
         }
-        public bool CheckPair(List<Card> tempHand)
+        private bool CheckPair(List<Card> tempHand)
         {
             return handResult == HandResults.OnePair;
         }
-        public bool CheckTwoPair(List<Card> tempHand)
+        private bool CheckTwoPair(List<Card> tempHand)
         {
             return handResult == HandResults.TwoPair;
         }
         //CheckFullHouse handles itself, three of a kind, two pair, and pairs.
-        public bool CheckFullHouse(List<Card> tempHand)
+        private bool CheckFullHouse(List<Card> tempHand)
         {
             IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups = tempHand.GroupBy(x => x.rank).Where(g => g.Count() >= 2);
             if(groups.Count(g => g.Count() == 3) == 1)
             {
-                //If we have a three of a kind we know the card in the middle is the winningRank
-                winningRank = tempHand[2].rank;
+                //If we have a three of a kind we know the card in the middle is the _winningRank
+                _winningRank = tempHand[2].rank;
                 if(groups.Count(g => g.Count() == 2) == 1)
                 {
                     handResult = HandResults.FullHouse;
-                    winningRankSub = groups.Where(g => g.Count() == 2).Last().Key;
+                    _winningRankSub = groups.Where(g => g.Count() == 2).Last().Key;
                     return true;
                 }
                 handResult = HandResults.ThreeOfAKind;
-            } else if(groups.Count(g => g.Count() == 2) > 0){
-
-                winningRank = groups.Last().Key;
+            }
+            else if (groups.Count(g => g.Count() == 2) >= 1)
+            {
+                _winningRank = groups.Last().Key;
                 
                 if(groups.Count() > 1)
                 {
-                    winningRankSub = groups.First().Key;
+                    _winningRankSub = groups.First().Key;
                     handResult = HandResults.TwoPair;
                     return false;
                 }
                 handResult = HandResults.OnePair;
             }
-                
             return false;
         }
-        public bool CheckThree(List<Card> tempHand)
+        private bool CheckThree(List<Card> tempHand)
         {
             return handResult == HandResults.ThreeOfAKind;
         }
-        public bool CheckFour(List<Card> tempHand)
+        private bool CheckFour(List<Card> tempHand)
         {
             
             if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 4) == 1)
             {
                 handResult = HandResults.FourOfAKind;
-                winningRank = tempHand[3].rank;
+                _winningRank = tempHand[3].rank;
                 return true;
             }
             return false;
         }
-        public bool CheckStraightFlush(List<Card> tempHand)
+        private bool CheckStraightFlush(List<Card> tempHand)
         {
             if (handResult == HandResults.StraightFlush)
                 return true;
@@ -142,7 +165,7 @@ namespace cardClass
             }
             return false;
         }
-        public bool CheckStraight(List<Card> tempHand)
+        private bool CheckStraight(List<Card> tempHand)
         {
             if(handResult == HandResults.Straight)
                 return true;
@@ -157,18 +180,17 @@ namespace cardClass
             }
             Debug.Log("End of for");
             if (beginningAce)
-                winningRank = tempHand[tempHand.Count - 2].rank;
+                _winningRank = tempHand[tempHand.Count - 2].rank;
             else
-                winningRank = tempHand.Last().rank;
+                _winningRank = tempHand.Last().rank;
             handResult = HandResults.Straight;
             tempHand.RemoveAt(4);
             return true;
         }
-
-        public bool CheckHighCard(List<Card> tempHand)
+        private bool CheckHighCard(List<Card> tempHand)
         {
             handResult = HandResults.HighCard;
-            winningRank = tempHand.Last().rank;
+            _winningRank = tempHand.Last().rank;
             return true;
         }
     }
