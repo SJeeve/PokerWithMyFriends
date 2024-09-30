@@ -4,5 +4,9 @@
   -Then implement ability to discard
   -Then add ability to bet (raise, fold, call)
   -Add base ai so npcs can make better decisions
+    -Thanks to Paul Hankin on stackoverflow
+    -Ok so, to do this I can make a lookup table of every possible poker hand (create this file on first boot). Then enumerate over         all possible replacement cards, and average the possibility of winning from your hand. 
+    -To store the data table, I could use a 5-dimensional list
+    -Probably should use a data table though
   -During development make ai modular so values can be easily changed
   -Make .json to store data for each person
