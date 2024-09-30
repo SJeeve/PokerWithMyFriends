@@ -6,9 +6,9 @@ namespace PokerEnums
     public class PokerEnums
     {
 
-        public enum Rank
+        public enum Rank : long
         {
-            Two = 0,
+            Two = 2,
             Three,
             Four,
             Five,
@@ -20,8 +20,8 @@ namespace PokerEnums
             Jack,
             Queen,
             King,
-            Ace = 12,
-            BeginningAce = -1,
+            Ace,
+            BeginningAce = 1,
         }
         public enum Suit
         {
@@ -30,6 +30,7 @@ namespace PokerEnums
             Hearts,
             Spades
         }
+        //Thanks Mr.Connor
         public enum HandResults 
         {
             None = -1,
