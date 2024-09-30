@@ -1,7 +1,6 @@
 -Need to plan how I'll implement the actual poker game
   -First distribute cards to each player (Done)
-  -rate hand and then declare winner (Working)
-	-Note: The card GameObject's order in layer could be used to get the card's position in list
+  -rate hand and then declare winner (Done)
   -Then implement ability to discard
   -Then add ability to bet (raise, fold, call)
   -Add base ai so npcs can make better decisions
