@@ -21,7 +21,7 @@ namespace PokerEnums
             Queen,
             King,
             Ace,
-            BeginningAce = 1,
+            BeginningAce = -1,
         }
         public enum Suit
         {

@@ -8,22 +8,19 @@ namespace cardClass
 {
     public class Deck
     {
-        Card[] cards = new Card[52];
+        Card[] unshuffledDeck = new Card[52];
         Stack<Card> shuffledDeck = new Stack<Card>();
         System.Random Random = new System.Random();
-        public Deck(Sprite[] cardSprites)
+        public Deck()
         {
-            Debug.Log((PokerEnums.PokerEnums.Rank)(0));
-            if (cardSprites.Length != 52)
-                Debug.Log("cardSprites array length not 52");
             for (int i = 0; i < 52; i++)
-                cards[i] = new Card((PokerEnums.PokerEnums.Suit)(i / 13), (PokerEnums.PokerEnums.Rank)(i % 13), cardSprites[i]);
+                unshuffledDeck[i] = new Card(i);
         }
 
         public void ShuffleDeck()
         {
             shuffledDeck.Clear();
-            shuffledDeck = RandomExtensions.Shuffle<Card>(Random, cards);
+            shuffledDeck = RandomExtensions.Shuffle<Card>(Random, unshuffledDeck);
         }
         public void PrintShuffled()
         {
@@ -34,7 +31,7 @@ namespace cardClass
         }
         public void PrintUnshuffled()
         {
-            foreach (Card card in cards)
+            foreach (Card card in unshuffledDeck)
             {
                 Debug.Log(card.ToString());
             }

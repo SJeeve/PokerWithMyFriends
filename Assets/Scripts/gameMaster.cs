@@ -23,14 +23,15 @@ public class gameMaster : MonoBehaviour
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
-        deck = new Deck(cardSprites);
+        deck = new Deck();
+        deck.PrintUnshuffled();
         deck.ShuffleDeck();
 
         //Game Start
         for (int i = 0; i < 4; i++)
         {
             characters.Add(new Character(playerObjects[i], "Player" + i));
-        }
+        }   
 
         DealToFive();
         foreach (Character character in characters)
@@ -48,17 +49,19 @@ public class gameMaster : MonoBehaviour
         List<Character> winners = characters.Where(x => x.GetHand().HandResult == characters.Max(g => g.GetHand().HandResult)).ToList();
         if (winners.Count() == 1)
             return winners[0];
+
         Debug.Log("Characters with same handResult");
         foreach (Character character in winners)
-        {
             Debug.Log(character);
-        }
+
         winners = winners.Where(x => x.GetHand().WinningRank == winners.Max(g => g.GetHand().WinningRank)).ToList();
         if (winners.Count() == 1)
             return winners[0];
+
         winners = winners.Where(x => x.GetHand().WinningRankSub == winners.Max(g => g.GetHand().WinningRankSub)).ToList();
         if(winners.Count() == 1)
             return winners[0];
+
         return null;
 
     }
