@@ -21,6 +21,11 @@ namespace cardClass
             this.rank = (PokerEnums.PokerEnums.Rank)0;
         }
 
+        public int getIndex()
+        {
+            return cardIndex;
+        }
+
         public override string ToString()
         {
             string output = "";

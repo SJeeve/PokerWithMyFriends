@@ -30,6 +30,7 @@ public class gameMaster : MonoBehaviour
         //Game Start
         for (int i = 0; i < 4; i++)
         {
+
             characters.Add(new Character(playerObjects[i], "Player" + i));
         }   
 
@@ -42,6 +43,13 @@ public class gameMaster : MonoBehaviour
         
         Debug.Log(winner.name + " won with a " + winner.HandResult().ToString() + winner);
 
+    }
+    public void StartRound()
+    {
+        for(int i = 0; i < characters.Count; i++)
+        {
+
+        }
     }
     public Character GetWinner()
     {

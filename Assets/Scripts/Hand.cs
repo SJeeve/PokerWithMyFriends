@@ -14,10 +14,22 @@ namespace cardClass
     {
         private List<Card> hand = new List<Card>();
         private PokerEnums.PokerEnums.HandResults handResult = HandResults.None;
+        public HandResults HandResults {
+            get { return handResult; }
+            private set { handResult = value; }
+        }
         private PokerEnums.PokerEnums.Rank _winningRank;
         private PokerEnums.PokerEnums.Rank _winningRankSub;
         private List<Func<Boolean>> handCheckers;
         public List<Card> _tempHand;
+        public float handScore = 0;
+        private int[] lastHandIndexes = { -1, -1, -1, -1, -1};
+        public float HandScore
+        {
+            get { return handScore; }
+            private set { handScore = value; }
+
+        }
         public PokerEnums.PokerEnums.Rank WinningRank
         {
             get => _winningRank;
@@ -64,10 +76,34 @@ namespace cardClass
         public void DiscardAll() => hand.Clear();
         public int GetLength() => hand.Count;
         public Card GetCard(int i) => hand[i];
+        public bool HasAce()
+        {
+            return hand.Any(card => card.rank == Rank.Ace);
+        }
         public void RateHand()
         {   
             if(hand.Count != 5)
                 Debug.LogWarning("Hand size does not equal 5");
+            hand = hand.OrderBy(x => x.rank).ToList();
+
+            int[] currentHandIndexes = new int[hand.Count];
+
+            //We check real quick to see if the new hand is the exact same as the old hand
+            //If so we don't need to check anything new so we just return
+            if (currentHandIndexes.SequenceEqual(lastHandIndexes))
+            {
+                return;
+            }
+            
+            //If we do have a different hand then we update the last hand
+
+            //Now that I think about it I could just have a boolean to check if we discarded
+            for (int i = 0; i < lastHandIndexes.Length; i++)
+            {
+                lastHandIndexes[0] = currentHandIndexes[i];
+            }
+
+
             _tempHand = new(hand);
             _tempHand = _tempHand.OrderBy(x => x.rank).ToList();
 
@@ -78,6 +114,7 @@ namespace cardClass
                     break;
                 }
             }
+            handScore = ((float)handResult) + ((float)WinningRank) / 10f + ((float)WinningRankSub) / 100;
         }
         //Change all checks to private after done testing
         private bool CheckRoyalFlush(List<Card> tempHand)

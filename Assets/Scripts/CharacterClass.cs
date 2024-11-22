@@ -46,6 +46,7 @@ namespace characterClass
         {
             return hand;
         }
+
         public void DiscardAll()
         {
             hand.DiscardAll();
