@@ -15,15 +15,18 @@ namespace cardClass
         private List<Card> hand = new List<Card>();
         private PokerEnums.PokerEnums.HandResults handResult = HandResults.None;
         public HandResults HandResults {
-            get { return handResult; }
+            get {
+                RateHand();
+                return handResult;
+            }
             private set { handResult = value; }
         }
         private PokerEnums.PokerEnums.Rank _winningRank;
         private PokerEnums.PokerEnums.Rank _winningRankSub;
         private List<Func<Boolean>> handCheckers;
+        private bool handHasChanged = true;
         public List<Card> _tempHand;
         public float handScore = 0;
-        private int[] lastHandIndexes = { -1, -1, -1, -1, -1};
         public float HandScore
         {
             get { return handScore; }
@@ -45,11 +48,27 @@ namespace cardClass
             get => handResult;
             private set => handResult = value;
         }
+
         public Hand()
         {
             HandResult = PokerEnums.PokerEnums.HandResults.None;
             handCheckers = new List<Func<Boolean>>();
             PopulateActions();
+        }
+        public void SortHand()
+        {
+            Debug.Log("Sorting hand");
+            hand = hand.OrderBy(c => c.rank).ToList();
+            Debug.Log("Hand sorted");
+        }
+        public int[] GetHandIndexes()
+        {
+            int[] array = new int[5];
+            for (int i = 0; i < hand.Count; i++)
+            {
+                array[i] = hand[i].getIndex();
+            }
+            return array;
         }
         public void PopulateActions()
         {
@@ -64,16 +83,39 @@ namespace cardClass
             handCheckers.Add(() => CheckPair(_tempHand));
             handCheckers.Add(() => CheckHighCard(_tempHand));
         }
+        public override string ToString()
+        {
+            Debug.Log("Checking hand contents");
+            string output = "";
+            for(int i = 0; i < hand.Count; i++)
+            {
+                output += hand[i].ToString();
+            }
+            return output;
+        }
         public void SetHand(List<Card> cards)
         {
             hand.Clear();
             hand = cards;
 
         }
-        public void AddCard(Card card) => hand.Add(card);
-        public void DiscardCard(Card card) => hand.Remove(card);
-        public void DiscardCard(int i) => hand.RemoveAt(i);
-        public void DiscardAll() => hand.Clear();
+        public void AddCard(Card card)
+        {
+            hand.Add(card);
+            SortHand();
+        }
+        public void DiscardCard(Card card) {
+            hand.Remove(card);
+            handHasChanged = true;
+        }
+        public void DiscardCard(int i) {
+            hand.RemoveAt(i);
+            handHasChanged = true;
+        }
+        public void DiscardAll()
+        {
+            hand.Clear();
+        }
         public int GetLength() => hand.Count;
         public Card GetCard(int i) => hand[i];
         public bool HasAce()
@@ -81,54 +123,41 @@ namespace cardClass
             return hand.Any(card => card.rank == Rank.Ace);
         }
         public void RateHand()
-        {   
-            if(hand.Count != 5)
+        {
+            if (hand.Count != 5)
                 Debug.LogWarning("Hand size does not equal 5");
             hand = hand.OrderBy(x => x.rank).ToList();
 
-            int[] currentHandIndexes = new int[hand.Count];
-
-            //We check real quick to see if the new hand is the exact same as the old hand
-            //If so we don't need to check anything new so we just return
-            if (currentHandIndexes.SequenceEqual(lastHandIndexes))
-            {
+            //If the hand hasn't changed then we don't care and don't need to check again
+            //This function is kinda costly so I'd prefer not to go through it when not needed
+            if (!handHasChanged)
                 return;
-            }
-            
-            //If we do have a different hand then we update the last hand
-
-            //Now that I think about it I could just have a boolean to check if we discarded
-            for (int i = 0; i < lastHandIndexes.Length; i++)
-            {
-                lastHandIndexes[0] = currentHandIndexes[i];
-            }
-
 
             _tempHand = new(hand);
             _tempHand = _tempHand.OrderBy(x => x.rank).ToList();
 
-            foreach(Func<Boolean> func in handCheckers)
+            foreach (Func<Boolean> func in handCheckers)
             {
                 if (func.Invoke())
                 {
                     break;
                 }
             }
-            handScore = ((float)handResult) + ((float)WinningRank) / 10f + ((float)WinningRankSub) / 100;
+            handScore = ((float)handResult) + ((float)WinningRank) / 10f + ((float)WinningRankSub) / 100f;
         }
-        //Change all checks to private after done testing
+        //Looking back there's a good chunk of optimizing I could do, but that would require rethinking and coding a bunch of logic that i dont have time for 
         private bool CheckRoyalFlush(List<Card> tempHand)
         {
-           if(CheckStraightFlush(tempHand) && _winningRank == Rank.Ace)
-           {
+            if (CheckStraightFlush(tempHand) && _winningRank == Rank.Ace)
+            {
                 handResult = HandResults.RoyalFlush;
                 return true;
-           }
-           return false;
+            }
+            return false;
         }
         private bool CheckFlush(List<Card> tempHand)
         {
-            if(handResult == HandResults.Flush)
+            if (handResult == HandResults.Flush)
                 return true;
             return !(tempHand.Any(card => card.suit != hand[index: 0].suit));
         }
@@ -144,11 +173,11 @@ namespace cardClass
         private bool CheckFullHouse(List<Card> tempHand)
         {
             IEnumerable<IGrouping<PokerEnums.PokerEnums.Rank, Card>> groups = tempHand.GroupBy(x => x.rank).Where(g => g.Count() >= 2);
-            if(groups.Count(g => g.Count() == 3) == 1)
+            if (groups.Count(g => g.Count() == 3) == 1)
             {
                 //If we have a three of a kind we know the card in the middle is the _winningRank
                 _winningRank = tempHand[2].rank;
-                if(groups.Count(g => g.Count() == 2) == 1)
+                if (groups.Count(g => g.Count() == 2) == 1)
                 {
                     handResult = HandResults.FullHouse;
                     _winningRankSub = groups.Where(g => g.Count() == 2).Last().Key;
@@ -159,8 +188,8 @@ namespace cardClass
             else if (groups.Count(g => g.Count() == 2) >= 1)
             {
                 _winningRank = groups.Last().Key;
-                
-                if(groups.Count() > 1)
+
+                if (groups.Count() > 1)
                 {
                     _winningRankSub = groups.First().Key;
                     handResult = HandResults.TwoPair;
@@ -176,11 +205,11 @@ namespace cardClass
         }
         private bool CheckFour(List<Card> tempHand)
         {
-            
+
             if (tempHand.GroupBy(x => x.rank).Count(g => g.Count() == 4) == 1)
             {
                 handResult = HandResults.FourOfAKind;
-                _winningRank = tempHand[3].rank;
+                _winningRank = tempHand[2].rank;
                 return true;
             }
             return false;
@@ -206,10 +235,9 @@ namespace cardClass
         {
             if(handResult == HandResults.Straight)
                 return true;
-            if (!(tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Five) || tempHand.Any(card => card.rank == PokerEnums.PokerEnums.Rank.Ten)))
+            if (!(tempHand.Any(card => card.rank == Rank.Five) || tempHand.Any(card => card.rank == Rank.Ten)))
                 return false;
             bool beginningAce = tempHand[4].rank == Rank.Ace && tempHand[0].rank == Rank.Two;
-            Debug.Log("Beginning Ace: " + beginningAce);
             for (int i = 0; i < tempHand.Count - 1; i++)
             {
                 if ((tempHand[i].rank + 1 != tempHand[i + 1].rank) && !(beginningAce && i == tempHand.Count - 2))

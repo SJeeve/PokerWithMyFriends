@@ -11,7 +11,7 @@ namespace binaryDiscard
             for (int i = 0; i < 31; i++)
             {
                 string value = Convert.ToString(i, 2);
-                value.PadLeft(5, '0');
+                value = value.PadLeft(5, '0');
                 discardBinary.Add(i, value);
             }
         }

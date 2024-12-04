@@ -46,6 +46,8 @@ namespace cardClass
     static class RandomExtensions
     {
         //Knuth shuffle
+        //To be completely honest why this is so effective in randomizing a list is a little above my understanding
+        //So I'll have to research that later
         public static Stack<Card> Shuffle<Card>(this System.Random rng, Card[] array)
         {
             Card[] tempArray = array;
@@ -64,6 +66,7 @@ namespace cardClass
             Stack<Card> stack = new Stack<Card>();
             for(int j = 0; j < tempArray.Length; j++)
             {
+                //This actually makes the stack the reverse of shuffled deck, but it doesn't matter so Im not changing it
                 stack.Push(tempArray[j]);
             }
             return stack;
