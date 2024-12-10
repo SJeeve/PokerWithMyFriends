@@ -14,13 +14,7 @@ namespace cardClass
     {
         private List<Card> hand = new List<Card>();
         private PokerEnums.PokerEnums.HandResults handResult = HandResults.None;
-        public HandResults HandResults {
-            get {
-                RateHand();
-                return handResult;
-            }
-            private set { handResult = value; }
-        }
+
         private PokerEnums.PokerEnums.Rank _winningRank;
         private PokerEnums.PokerEnums.Rank _winningRankSub;
         private List<Func<Boolean>> handCheckers;
@@ -45,7 +39,11 @@ namespace cardClass
         }
         public PokerEnums.PokerEnums.HandResults HandResult
         {
-            get => handResult;
+            get 
+            {
+                RateHand();
+                return handResult;
+            } 
             private set => handResult = value;
         }
 
@@ -57,9 +55,7 @@ namespace cardClass
         }
         public void SortHand()
         {
-            Debug.Log("Sorting hand");
             hand = hand.OrderBy(c => c.rank).ToList();
-            Debug.Log("Hand sorted");
         }
         public int[] GetHandIndexes()
         {
@@ -114,7 +110,12 @@ namespace cardClass
         }
         public void DiscardAll()
         {
+            Debug.Log("DiscardAll called");
             hand.Clear();
+            handResult = HandResults.None;
+            WinningRank = Rank.Nothing;
+            WinningRankSub = Rank.Nothing;
+
         }
         public int GetLength() => hand.Count;
         public Card GetCard(int i) => hand[i];
@@ -125,7 +126,11 @@ namespace cardClass
         public void RateHand()
         {
             if (hand.Count != 5)
+            {
                 Debug.LogWarning("Hand size does not equal 5");
+                return;
+            }
+
             hand = hand.OrderBy(x => x.rank).ToList();
 
             //If the hand hasn't changed then we don't care and don't need to check again
@@ -249,7 +254,6 @@ namespace cardClass
             else
                 _winningRank = tempHand.Last().rank;
             handResult = HandResults.Straight;
-            tempHand.RemoveAt(4);
             return true;
         }
         private bool CheckHighCard(List<Card> tempHand)

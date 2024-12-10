@@ -23,27 +23,39 @@ public class pokerAgent : Agent, Character
     public static int agentID = 0;
     GameObject agentBody;
     List<int[]> AllAgentHands = new List<int[]>();
-    public int place = 0;
-
-    public static Dictionary<int, string> discardBinaries = new Dictionary<int, string>();
-    //Accidentally made a stack overflow error
-    PokerEnums.PokerEnums.HandResults _currentHand;
+    private int place = 0;
+    private bool HasDiscarded = false;
+    private bool ReadyForNewRound = true;
+    private static Dictionary<int, string> discardBinaries = new Dictionary<int, string>();
+    //Accidentally made a stack overflow error whoops
+    PokerEnums.PokerEnums.HandResults _currentHand = PokerEnums.PokerEnums.HandResults.None;
     PokerEnums.PokerEnums.HandResults currentHand
     {
         get { return _currentHand; }
         set 
         {
             //Little check to make sure we never accidentally add a reward for a hand still in the process of discarding and drawing
+
             if (hand.GetLength() == 5)
             {
-                Debug.Log("IF STATEMENT FOR CURRENTHAND");
-                //This means that the current hand changed
-                //If they got a better hand then they will gain a reward
-                //If they got a worse hand then they get punished
-                Debug.Log(hand.ToString());
-                AddReward(((float)value - (float)_currentHand) * 0.2f);
+                Debug.Log($"Checking incoming value\n{value}");
+                Debug.Log($"Current value\n{_currentHand}");
+                if (_currentHand != PokerEnums.PokerEnums.HandResults.None && value != _currentHand)
+                {
+                    Debug.Log("IF STATEMENT FOR CURRENTHAND");
+                    //This means that the current hand changed
+                    //If they got a better hand then they will gain a reward
+                    //If they got a worse hand then they get punished
+                    Debug.Log(hand.ToString());
+                    if (!ReadyForNewRound) 
+                    {
+                        Debug.Log("Change in reward: " + (((float)value - (float)_currentHand)) * 0.5f);
+                        AddReward(((float)value - (float)_currentHand) * 0.2f);
+                    }
+                }
                 _currentHand = value;
             }
+
         }
     }
 
@@ -54,13 +66,20 @@ public class pokerAgent : Agent, Character
     {
         base.Awake();
         discardBinaryOperations.PopulateDictionary(discardBinaries);
-
+    }
+    public bool GetReadyForNewRound()
+    {
+        return ReadyForNewRound;
+    }
+    public void setReadyForNewRound(bool value)
+    {
+        ReadyForNewRound = value;
     }
     void Start()
     {
+        Academy.Instance.AutomaticSteppingEnabled = false;
         Debug.Log("Initialized Hand");
         hand = new Hand();
-        Academy.Instance.AutomaticSteppingEnabled = false;
         AgentName = "Agent " + agentID;
         agentID++;
     }
@@ -70,41 +89,47 @@ public class pokerAgent : Agent, Character
         discreteActionsOut[0] = 12;
         Debug.Log("Option pressed is " + (discreteActionsOut[0]));
     }
-    public int GetPressedNumber()
-    {
-        for (int number = 0; number <= 9; number++)
-        {
-            if (Input.GetKeyDown(number.ToString()))
-                return number;
-        }
-        return -1;
-    }
+
     public override void OnEpisodeBegin()
     {
-        Academy.Instance.AutomaticSteppingEnabled = false;
-        AllAgentHands.Clear();
+        Debug.Log("OnEpisode Begin Called");
         for (int i = 0; i < 3; i++)
             AllAgentHands.Add(new int[]{ -1,-1,-1,-1,-1});
     }
     public void AdvanceStep()
     {
-        currentHand = hand.HandResult;
+        RateHand();
+        Debug.Log("AdvanceStep called");
+        Debug.Log("Current hand: " + hand.ToString());
+        Debug.Log("Current rating: " + currentHand);
         Academy.Instance.EnvironmentStep();
     }
-
+    public void RateHand()
+    {
+        Debug.Log("RateHand function in pokeragent");
+        hand.RateHand();
+        currentHand = hand.HandResult;
+    }
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
+        if (HasDiscarded)
+            return;
         hand.SortHand();
         Debug.Log("ActionReceived");
         int discardKey = actionBuffers.DiscreteActions[0];
         string discardValue = discardBinaries[discardKey];
+        DiscardFromBinary(discardValue);
+        HasDiscarded = true;
+    }
+    public void DiscardFromBinary(string discardValue)
+    {
         List<Card> cardsToDiscard = new List<Card>();
         Debug.Log(discardValue);
         Debug.Log(hand.ToString());
         //This is kinda scuff but unfortunately because the discardValue does not change correctly calculating offset is kinda a headache
         //because although normally we can just i--; discardValue doesn't change so we just end up discarding every card
         //It's not that difficult but I don't feel like testing, and this is still O(2n) which is O(n) so who cares
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             if (discardValue[i].Equals('1'))
             {
@@ -113,27 +138,23 @@ public class pokerAgent : Agent, Character
                 cardsToDiscard.Add(hand.GetCard(i));
             }
         }
-        
-        foreach(Card card in cardsToDiscard)
+        foreach (Card card in cardsToDiscard)
         {
-            DiscardCard(card); 
+            DiscardCard(card);
         }
         Debug.Log("Hand after discard");
         Debug.Log(hand.ToString());
     }
     public void AddCard(Card card)
     {
-        Debug.Log($"Added {card} to {AgentName}'s hand");
         hand.AddCard(card);
     }
     public void DiscardCard(Card card)
     {
-        Debug.Log($"Removed {card} from {AgentName}'s hand");
         hand.DiscardCard(card);
     }
     public void DiscardCard(int i)
     {
-        Debug.Log($"Removed card at index {i} from {AgentName}'s hand");
         hand.DiscardCard(i);
     }
     public PokerEnums.PokerEnums.HandResults HandResult()
@@ -153,6 +174,7 @@ public class pokerAgent : Agent, Character
     }
     public override void CollectObservations(VectorSensor sensor)
     {
+        currentHand = hand.HandResult;
         sensor.AddObservation(hand.HasAce());
         //sensor.AddObservation(place);
         int[] handIndexes = hand.GetHandIndexes();
@@ -163,7 +185,7 @@ public class pokerAgent : Agent, Character
         }
         /*Commented out code was for allowing the ai to learn with multiple other ai at the same time
         however I decided it would be easier to just have one train at a time. However in the future 
-        when I implement betting it will be important to allow for multiple to train at a time*/
+        when I implement betting it will be important to allow for multiple to train at a time so they can learn from each other*/
         /*for(int i = 0; i < AllAgentHands.Count;i++)
         {
             for(int j = 0; j < AllAgentHands[i].Length;j++)
@@ -191,6 +213,18 @@ public class pokerAgent : Agent, Character
     {
         AllAgentHands.Clear();
         AllAgentHands = array;
+    }
+    public void RewardAndEndEpisode()
+    {
+        Debug.Log("Ending Episode");
+        EndEpisode();
+        hand.DiscardAll();
+        ReadyForNewRound = true;
+        currentHand = PokerEnums.PokerEnums.HandResults.None;
+        HasDiscarded = false;
+        handScore = 0;
+        AllAgentHands.Clear();
+
     }
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
     {

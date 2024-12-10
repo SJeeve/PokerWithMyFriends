@@ -22,6 +22,7 @@ namespace PokerEnums
             King,
             Ace,
             BeginningAce = -1,
+            Nothing = 0,
         }
         public enum Suit
         {
@@ -33,7 +34,7 @@ namespace PokerEnums
         //Thanks Mr.Connor
         public enum HandResults 
         {
-            None = -1,
+            None = 0,
             HighCard = 1,
             OnePair = 2,
             TwoPair = 3,

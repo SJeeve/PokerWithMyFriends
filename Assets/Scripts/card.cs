@@ -14,6 +14,12 @@ namespace cardClass
             suit = (PokerEnums.PokerEnums.Suit)(cardIndex / 13);
             rank = (PokerEnums.PokerEnums.Rank)(cardIndex % 13 + 2);
         }
+        public Card(PokerEnums.PokerEnums.Suit suit, PokerEnums.PokerEnums.Rank rank, int cardIndex)
+        {
+            this.suit = suit;
+            this.rank = rank;
+            this.cardIndex = cardIndex;
+        }
 
         public Card()
         {
